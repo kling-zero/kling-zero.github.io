@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分布式商城业务分析 | Hello,World</title><meta name="author" content="kling-zero"><meta name="copyright" content="kling-zero"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="探索Mall商城的技术亮点：从基础架构到业务实现本文旨在考虑Mall商城可以挖掘的项目亮点，为了找实习做准备。 业务分析商品模块 使用Elastcisearch进行商品搜索 —Elasticsearch相关基础，以及分布式系统下保证数据一致性 商品涉及到热点数据的缓存，多级缓存和分布式缓存—-考虑到CAP理论，数据的一致性 商品的数据库设计，多种属性关联  分库分表设计数据库 访问量大  订单模块">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式商城业务分析">
+<meta property="og:url" content="http://example.com/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/index.html">
+<meta property="og:site_name" content="Hello,World">
+<meta property="og:description" content="探索Mall商城的技术亮点：从基础架构到业务实现本文旨在考虑Mall商城可以挖掘的项目亮点，为了找实习做准备。 业务分析商品模块 使用Elastcisearch进行商品搜索 —Elasticsearch相关基础，以及分布式系统下保证数据一致性 商品涉及到热点数据的缓存，多级缓存和分布式缓存—-考虑到CAP理论，数据的一致性 商品的数据库设计，多种属性关联  分库分表设计数据库 访问量大  订单模块">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/feng.png">
+<meta property="article:published_time" content="2024-07-01T13:05:31.000Z">
+<meta property="article:modified_time" content="2024-07-01T13:42:09.306Z">
+<meta property="article:author" content="kling-zero">
+<meta property="article:tag" content="mall项目实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/feng.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: 'days',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分布式商城业务分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-07-01 21:42:09'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/feng.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Hello,World"><img class="site-icon" src="/img/head.png"/><span class="site-name">Hello,World</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">分布式商城业务分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-07-01T13:05:31.000Z" title="Created 2024-07-01 21:05:31">2024-07-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-07-01T13:42:09.306Z" title="Updated 2024-07-01 21:42:09">2024-07-01</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="探索Mall商城的技术亮点：从基础架构到业务实现"><a href="#探索Mall商城的技术亮点：从基础架构到业务实现" class="headerlink" title="探索Mall商城的技术亮点：从基础架构到业务实现"></a>探索Mall商城的技术亮点：从基础架构到业务实现</h1><p>本文旨在考虑Mall商城可以挖掘的项目亮点，为了找实习做准备。</p>
+<h1 id="业务分析"><a href="#业务分析" class="headerlink" title="业务分析"></a>业务分析</h1><h2 id="商品模块"><a href="#商品模块" class="headerlink" title="商品模块"></a>商品模块</h2><ul>
+<li>使用Elastcisearch进行商品搜索 —Elasticsearch相关基础，以及分布式系统下保证数据一致性</li>
+<li>商品涉及到热点数据的缓存，多级缓存和分布式缓存—-考虑到CAP理论，数据的一致性</li>
+<li>商品的数据库设计，多种属性关联 </li>
+<li>分库分表设计数据库 访问量大</li>
+</ul>
+<h2 id="订单模块"><a href="#订单模块" class="headerlink" title="订单模块"></a>订单模块</h2><h3 id="订单设计"><a href="#订单设计" class="headerlink" title="订单设计"></a>订单设计</h3><ul>
+<li>多个节点状态设计，订单创建流程</li>
+<li>订单业务与库存的交互，保证一致性</li>
+</ul>
+<h3 id="订单存储"><a href="#订单存储" class="headerlink" title="订单存储"></a>订单存储</h3><ul>
+<li>目前正在参考B站河北王校长的视频</li>
+</ul>
+<h2 id="营销模块"><a href="#营销模块" class="headerlink" title="营销模块"></a>营销模块</h2><h3 id="秒杀系统"><a href="#秒杀系统" class="headerlink" title="秒杀系统"></a>秒杀系统</h3><ul>
+<li>经典八股文</li>
+</ul>
+<h3 id="优惠券系统"><a href="#优惠券系统" class="headerlink" title="优惠券系统"></a>优惠券系统</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://javabetter.cn/interview/mianshiguan-youhuiquan.html#_2-1-%E6%9C%8D%E5%8A%A1%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1">优惠券系统设计</a></li>
+</ul>
+<h2 id="权限模块"><a href="#权限模块" class="headerlink" title="权限模块"></a>权限模块</h2><ul>
+<li>RBAC权限模块</li>
+<li>SpringSecurity+JWT安全性<ul>
+<li>JWT相关</li>
+<li>springSecurity相关</li>
+</ul>
+</li>
+</ul>
+<h1 id="架构分析"><a href="#架构分析" class="headerlink" title="架构分析"></a>架构分析</h1><h2 id="微服务结构"><a href="#微服务结构" class="headerlink" title="微服务结构"></a>微服务结构</h2><ul>
+<li>如何划分拆分相关结构</li>
+<li>DDD架构模型相关考虑–拓展延伸</li>
+</ul>
+<h2 id="微服务组件"><a href="#微服务组件" class="headerlink" title="微服务组件"></a>微服务组件</h2><ul>
+<li><p>dubbo</p>
+</li>
+<li><p>gateway</p>
+</li>
+<li><p>nacos</p>
+</li>
+<li><p>如何保证各系统通信效率</p>
+</li>
+</ul>
+<h2 id="分布式系统"><a href="#分布式系统" class="headerlink" title="分布式系统"></a>分布式系统</h2><ul>
+<li><p>分布式算法</p>
+</li>
+<li><p>分布式事务</p>
+</li>
+<li><p>分布式ID</p>
+</li>
+</ul>
+<hr>
+<p>暂时想到这些到时候会根据这个进行系统的学习，丰富并完善这篇博客</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">kling-zero</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/">http://example.com/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mall%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">mall项目实战</a></div><div class="post_share"><div class="social-share" data-image="/img/feng.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">kling-zero</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">1</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/kling-zero"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">世界以痛吻我，我伸舌头</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2Mall%E5%95%86%E5%9F%8E%E7%9A%84%E6%8A%80%E6%9C%AF%E4%BA%AE%E7%82%B9%EF%BC%9A%E4%BB%8E%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E5%88%B0%E4%B8%9A%E5%8A%A1%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">探索Mall商城的技术亮点：从基础架构到业务实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">业务分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%86%E5%93%81%E6%A8%A1%E5%9D%97"><span class="toc-number">2.1.</span> <span class="toc-text">商品模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A2%E5%8D%95%E6%A8%A1%E5%9D%97"><span class="toc-number">2.2.</span> <span class="toc-text">订单模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A2%E5%8D%95%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.1.</span> <span class="toc-text">订单设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A2%E5%8D%95%E5%AD%98%E5%82%A8"><span class="toc-number">2.2.2.</span> <span class="toc-text">订单存储</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%90%A5%E9%94%80%E6%A8%A1%E5%9D%97"><span class="toc-number">2.3.</span> <span class="toc-text">营销模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.3.1.</span> <span class="toc-text">秒杀系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E6%83%A0%E5%88%B8%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.3.2.</span> <span class="toc-text">优惠券系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%A8%A1%E5%9D%97"><span class="toc-number">2.4.</span> <span class="toc-text">权限模块</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">架构分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">微服务结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%BB%84%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text">微服务组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.3.</span> <span class="toc-text">分布式系统</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/" title="分布式商城业务分析"><img src="/img/feng.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分布式商城业务分析"/></a><div class="content"><a class="title" href="/2024/07/01/%E5%88%86%E5%B8%83%E5%BC%8F%E5%95%86%E5%9F%8E%E4%B8%9A%E5%8A%A1%E4%B8%8E%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90--1/" title="分布式商城业务分析">分布式商城业务分析</a><time datetime="2024-07-01T13:05:31.000Z" title="Created 2024-07-01 21:05:31">2024-07-01</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/feng.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By kling-zero</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script></div></body></html>
